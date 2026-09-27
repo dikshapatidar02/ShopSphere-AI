@@ -11,7 +11,13 @@ export interface RegisterData {
   readonly password: string;
 }
 
-export type AuthStatus = 'unauthenticated' | 'authenticating' | 'authenticated';
+export type AuthStatus =
+  | 'idle'
+  | 'hydrating'
+  | 'authenticating'
+  | 'authenticated'
+  | 'unauthenticated'
+  | 'error';
 
 export interface AuthSession {
   readonly user: User;
