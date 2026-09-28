@@ -8,6 +8,7 @@ import { ProductGallery } from './ProductGallery';
 import { ProductInfo } from './ProductInfo';
 import { ProductNotFound } from './ProductNotFound';
 import { ProductSpecifications } from './ProductSpecifications';
+import { RecommendationRail, useTrackProductViewOnMount } from '@/features/recommendations';
 
 interface ProductDetailViewProps {
   readonly productId: string;
@@ -21,6 +22,9 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
     error,
     refetch,
   } = useProductDetail(productId);
+
+  // Track product view in personalization history
+  useTrackProductViewOnMount(product);
 
   if (isLoading) {
     return <ProductDetailSkeleton />;
@@ -69,6 +73,21 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
         categoryName={product.categoryName}
         category={product.category}
       />
+
+      {/* Recommendation Rails */}
+      <div className="pt-8 border-t border-border space-y-8">
+        <RecommendationRail
+          strategy="frequently_bought_together"
+          context={{ productId: product.id }}
+          limit={4}
+        />
+        <RecommendationRail
+          strategy="similar_products"
+          context={{ productId: product.id, categorySlug: product.category }}
+          limit={4}
+        />
+      </div>
     </div>
   );
 }
+

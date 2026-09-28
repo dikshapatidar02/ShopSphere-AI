@@ -7,6 +7,7 @@ import { CartHeader } from './CartHeader';
 import { CartItemList } from './CartItemList';
 import { CartSummary } from './CartSummary';
 import { SavedForLater } from './SavedForLater';
+import { RecommendationRail } from '@/features/recommendations';
 
 export function CartView() {
   const {
@@ -26,6 +27,8 @@ export function CartView() {
   } = useCart();
 
   useCartRevalidation();
+
+  const cartProductIds = items.map((i) => i.productId);
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -71,6 +74,16 @@ export function CartView() {
           )}
         </div>
       )}
+
+      {/* Recommendation Rail */}
+      <div className="pt-8 border-t border-border">
+        <RecommendationRail
+          strategy="cart_based"
+          context={{ currentCartProductIds: cartProductIds }}
+          limit={4}
+        />
+      </div>
     </main>
   );
 }
+

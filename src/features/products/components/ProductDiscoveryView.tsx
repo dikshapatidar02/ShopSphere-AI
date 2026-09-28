@@ -14,8 +14,10 @@ import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
 import { SearchBar } from './SearchBar';
 import { SortSelect } from './SortSelect';
+import { RecommendationRail, usePersonalizationTracker } from '@/features/recommendations';
 
 export function ProductDiscoveryView() {
+  const { trackSearchQuery } = usePersonalizationTracker();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -52,13 +54,16 @@ export function ProductDiscoveryView() {
     setSearchInput(queryState.q || '');
   }
 
-  // Sync debounced search value to URL query
+  // Sync debounced search value to URL query & record signal
   useEffect(() => {
     const currentQ = queryState.q || '';
     if (debouncedSearch !== currentQ) {
+      if (debouncedSearch && debouncedSearch.trim().length > 0) {
+        trackSearchQuery(debouncedSearch, queryState.category);
+      }
       updateQuery({ q: debouncedSearch || undefined, page: 1 });
     }
-  }, [debouncedSearch, queryState.q, updateQuery]);
+  }, [debouncedSearch, queryState.category, queryState.q, trackSearchQuery, updateQuery]);
 
   // 4. Mobile filter drawer state
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -171,6 +176,13 @@ export function ProductDiscoveryView() {
           />
         </div>
       </div>
+
+      {/* Recommendation Rails */}
+      <div className="pt-8 border-t border-border/60 space-y-8">
+        <RecommendationRail strategy="personalized_for_you" limit={4} />
+        <RecommendationRail strategy="trending" limit={4} />
+      </div>
     </div>
   );
 }
+
