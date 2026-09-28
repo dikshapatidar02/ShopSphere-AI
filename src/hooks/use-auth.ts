@@ -53,6 +53,7 @@ export function useAuth() {
     login,
     register,
     logout,
+    updateProfile: useAuthStore((s) => s.updateProfile),
     restoreSession,
     clearError,
   };

@@ -70,7 +70,7 @@ export function persistUserPersonalizationSignals(
 
 export class PersonalizationSignalService {
   public getSignals(
-    userId: string | null,
+    userId: string | null = null,
     cartProductIds: readonly string[] = [],
     wishlistProductIds: readonly string[] = [],
     purchasedProductIds: readonly string[] = []

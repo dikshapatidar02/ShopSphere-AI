@@ -19,6 +19,7 @@ export interface AuthStoreActions {
   restoreSession(): Promise<void>;
   clearError(): void;
   setSession(session: AuthSession | null): void;
+  updateProfile(updates: { name: string; email: string; phone?: string }): Promise<void>;
 }
 
 export type AuthStore = AuthStateValues & AuthStoreActions;
@@ -126,6 +127,26 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  updateProfile: async (updates: { name: string; email: string; phone?: string }) => {
+    const currentSession = get().session;
+    if (!currentSession || !currentSession.user) return;
+
+    const updatedUser: User = {
+      ...currentSession.user,
+      name: updates.name,
+      email: updates.email,
+      phone: updates.phone,
+      updatedAt: new Date().toISOString(),
+    };
+
+    const updatedSession: AuthSession = {
+      ...currentSession,
+      user: updatedUser,
+    };
+
+    get().setSession(updatedSession);
+  },
 }));
 
 // Setup cross-tab sync listener

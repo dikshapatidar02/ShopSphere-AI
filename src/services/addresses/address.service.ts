@@ -85,3 +85,75 @@ export function persistUserAddresses(userId: string | null, addresses: readonly 
     // Ignore storage quota error
   }
 }
+
+export class AddressService {
+  public getAddresses(userId: string | null): Address[] {
+    return loadUserAddresses(userId);
+  }
+
+  public addAddress(userId: string | null, newAddress: Omit<Address, 'id'>): Address {
+    const existing = loadUserAddresses(userId);
+    const created: Address = {
+      ...newAddress,
+      id: `addr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      line1: newAddress.line1,
+      line2: newAddress.line2,
+    };
+
+    let updated = [created, ...existing];
+    if (created.isDefault || existing.length === 0) {
+      updated = updated.map((a) => ({ ...a, isDefault: a.id === created.id }));
+    }
+
+    persistUserAddresses(userId, updated);
+    return created;
+  }
+
+  public updateAddress(
+    userId: string | null,
+    addressId: string,
+    updates: Partial<Address>
+  ): Address | null {
+    const existing = loadUserAddresses(userId);
+    const index = existing.findIndex((a) => a.id === addressId);
+    if (index === -1) return null;
+
+    const updatedItem = { ...existing[index], ...updates };
+    existing[index] = updatedItem;
+
+    if (updates.isDefault) {
+      for (let i = 0; i < existing.length; i++) {
+        existing[i] = { ...existing[i], isDefault: existing[i].id === addressId };
+      }
+    }
+
+    persistUserAddresses(userId, existing);
+    return updatedItem;
+  }
+
+  public deleteAddress(userId: string | null, addressId: string): boolean {
+    const existing = loadUserAddresses(userId);
+    const filtered = existing.filter((a) => a.id !== addressId);
+    if (filtered.length === existing.length) return false;
+
+    if (filtered.length > 0 && !filtered.some((a) => a.isDefault)) {
+      filtered[0] = { ...filtered[0], isDefault: true };
+    }
+
+    persistUserAddresses(userId, filtered);
+    return true;
+  }
+
+  public setDefaultAddress(userId: string | null, addressId: string): boolean {
+    const existing = loadUserAddresses(userId);
+    const updated = existing.map((a) => ({
+      ...a,
+      isDefault: a.id === addressId,
+    }));
+
+    persistUserAddresses(userId, updated);
+    return true;
+  }
+}
+
+export const addressService = new AddressService();
