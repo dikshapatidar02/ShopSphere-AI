@@ -33,6 +33,11 @@ export function Header() {
           <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
             Search
           </Link>
+          {isAuthenticated && (
+            <Link href="/orders" className="text-muted-foreground hover:text-foreground transition-colors">
+              My Orders
+            </Link>
+          )}
         </nav>
 
         {/* User / Cart / Wishlist Actions */}
