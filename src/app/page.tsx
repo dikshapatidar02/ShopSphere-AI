@@ -1,17 +1,24 @@
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
+import { ProductDiscoveryView } from '@/features/products/components/ProductDiscoveryView';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'ShopSphere AI — Intelligent E-Commerce Storefront',
+  description: 'Discover intelligent e-commerce products with advanced search, filtering, and modern design.',
+};
+
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-      <div className="max-w-xl space-y-4">
-        <div className="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground">
-          Phase 01 — Project Foundation
-        </div>
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          ShopSphere AI
-        </h1>
-        <p className="text-base text-muted-foreground sm:text-lg">
-          Intelligent E-Commerce Platform foundation initialized successfully.
-        </p>
-      </div>
-    </main>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <Header />
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
+        <Suspense fallback={<div className="p-8 text-center text-sm text-muted-foreground">Loading storefront...</div>}>
+          <ProductDiscoveryView />
+        </Suspense>
+      </main>
+      <Footer />
+    </div>
   );
 }

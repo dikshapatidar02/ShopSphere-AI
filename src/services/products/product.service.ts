@@ -1,4 +1,5 @@
-import type { ApiResponse, Product } from '@/types';
+import type { ProductDiscoveryQuery } from '@/features/products/types/discovery-query';
+import type { ApiResponse, Product, SearchResult } from '@/types';
 import { apiConfig } from '../api/config';
 import { globalCache, SimpleCache } from '../cache/simple-cache';
 import { MockProductProvider } from '../mocks/product.mock-provider';
@@ -31,7 +32,6 @@ export class ProductService {
       return res;
     }
 
-    // Fallback to last known cache if provider request failed
     const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
     if (fallback) {
       return { success: true, data: fallback };
@@ -117,6 +117,150 @@ export class ProductService {
     }
 
     return res;
+  }
+
+  public async discoverProducts(
+    discoveryQuery: ProductDiscoveryQuery,
+    signal?: AbortSignal
+  ): Promise<ApiResponse<SearchResult>> {
+    const q = discoveryQuery.q?.trim() || '';
+    const category = discoveryQuery.category?.trim() || '';
+    const page = Math.max(1, discoveryQuery.page || 1);
+    const limit = Math.min(100, Math.max(1, discoveryQuery.limit || 12));
+
+    const cacheKey = `discovery_${JSON.stringify(discoveryQuery)}`;
+    const cached = this.cache.get<SearchResult>(cacheKey);
+    if (cached) {
+      return { success: true, data: cached };
+    }
+
+    // Fetch base dataset from provider
+    let baseRes: ApiResponse<ProductListResponse>;
+    if (q.length > 0) {
+      baseRes = await this.provider.searchProducts(q, { limit: 100, skip: 0, signal });
+    } else if (category.length > 0 && category !== 'all') {
+      baseRes = await this.provider.getProductsByCategory(category, { limit: 100, skip: 0, signal });
+    } else {
+      baseRes = await this.provider.getProducts({ limit: 100, skip: 0, signal });
+    }
+
+    if (!baseRes.success) {
+      const fallback = this.cache.getLastKnown<SearchResult>(cacheKey);
+      if (fallback) {
+        return { success: true, data: fallback };
+      }
+      return baseRes;
+    }
+
+    let items = [...baseRes.data.products];
+
+    // Filter by category if query was search
+    if (category && category !== 'all' && q.length > 0) {
+      items = items.filter(
+        (p) =>
+          p.category.toLowerCase() === category.toLowerCase() ||
+          p.categoryName?.toLowerCase() === category.toLowerCase()
+      );
+    }
+
+    // Filter by min price
+    if (typeof discoveryQuery.minPrice === 'number') {
+      items = items.filter((p) => p.discountedPrice >= discoveryQuery.minPrice!);
+    }
+
+    // Filter by max price
+    if (typeof discoveryQuery.maxPrice === 'number') {
+      items = items.filter((p) => p.discountedPrice <= discoveryQuery.maxPrice!);
+    }
+
+    // Filter by min rating
+    if (typeof discoveryQuery.minRating === 'number') {
+      items = items.filter((p) => p.rating >= discoveryQuery.minRating!);
+    }
+
+    // Filter by brand
+    if (discoveryQuery.brand && discoveryQuery.brand.trim().length > 0) {
+      const targetBrand = discoveryQuery.brand.trim().toLowerCase();
+      items = items.filter((p) => p.brand.toLowerCase() === targetBrand);
+    }
+
+    // Filter by availability
+    if (discoveryQuery.availability === 'in_stock') {
+      items = items.filter((p) => p.stock > 0 && p.availability !== 'out_of_stock');
+    } else if (discoveryQuery.availability === 'out_of_stock') {
+      items = items.filter((p) => p.stock === 0 || p.availability === 'out_of_stock');
+    }
+
+    // Derive facets
+    const brandCounts = new Map<string, number>();
+    const categoryCounts = new Map<string, number>();
+    let minPriceFound = Infinity;
+    let maxPriceFound = 0;
+
+    items.forEach((p) => {
+      brandCounts.set(p.brand, (brandCounts.get(p.brand) || 0) + 1);
+      categoryCounts.set(p.category, (categoryCounts.get(p.category) || 0) + 1);
+      if (p.discountedPrice < minPriceFound) minPriceFound = p.discountedPrice;
+      if (p.discountedPrice > maxPriceFound) maxPriceFound = p.discountedPrice;
+    });
+
+    // Sort items
+    const sort = discoveryQuery.sort || 'relevance';
+    if (sort === 'price_asc') {
+      items.sort((a, b) => a.discountedPrice - b.discountedPrice);
+    } else if (sort === 'price_desc') {
+      items.sort((a, b) => b.discountedPrice - a.discountedPrice);
+    } else if (sort === 'rating_desc') {
+      items.sort((a, b) => b.rating - a.rating);
+    } else if (sort === 'name_asc') {
+      items.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sort === 'name_desc') {
+      items.sort((a, b) => b.title.localeCompare(a.title));
+    }
+
+    // Pagination
+    const total = items.length;
+    const totalPages = Math.ceil(total / limit) || 1;
+    const clampedPage = Math.min(page, totalPages);
+    const skip = (clampedPage - 1) * limit;
+    const pagedProducts = items.slice(skip, skip + limit);
+
+    const result: SearchResult = {
+      products: pagedProducts,
+      metadata: {
+        total,
+        page: clampedPage,
+        limit,
+        totalPages,
+        appliedFilters: {
+          categories: category && category !== 'all' ? [category] : [],
+          brands: discoveryQuery.brand ? [discoveryQuery.brand] : [],
+          minPrice: discoveryQuery.minPrice,
+          maxPrice: discoveryQuery.maxPrice,
+          minRating: discoveryQuery.minRating,
+          inStockOnly: discoveryQuery.availability === 'in_stock',
+        },
+        availableCategories: Array.from(categoryCounts.entries()).map(([cat, count]) => ({
+          slug: cat,
+          name: cat
+            .split('-')
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' '),
+          count,
+        })),
+        availableBrands: Array.from(brandCounts.entries()).map(([b, count]) => ({
+          name: b,
+          count,
+        })),
+        priceRange: {
+          min: minPriceFound === Infinity ? 0 : minPriceFound,
+          max: maxPriceFound,
+        },
+      },
+    };
+
+    this.cache.set(cacheKey, result, apiConfig.cacheTtlMs);
+    return { success: true, data: result };
   }
 }
 
