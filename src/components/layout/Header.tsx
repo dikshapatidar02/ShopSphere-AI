@@ -47,13 +47,13 @@ export function Header() {
 
           {/* Wishlist Affordance */}
           <Link
-            href="/products"
-            aria-label="Wishlist"
+            href="/wishlist"
+            aria-label={`Wishlist (${wishlistCount} items)`}
             className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >
             <Heart className="h-4 w-4" />
             {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">
                 {wishlistCount}
               </span>
             )}
@@ -61,8 +61,8 @@ export function Header() {
 
           {/* Cart Affordance */}
           <Link
-            href="/products"
-            aria-label="Cart"
+            href="/cart"
+            aria-label={`Cart (${itemCount} items)`}
             className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >
             <ShoppingBag className="h-4 w-4" />

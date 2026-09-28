@@ -1,7 +1,9 @@
 'use client';
 
+import { useCart } from '@/hooks/use-cart';
+import { useWishlist } from '@/hooks/use-wishlist';
 import type { Product } from '@/types';
-import { Check, ShieldCheck, ShoppingBag, Star, Tag, Truck } from 'lucide-react';
+import { Check, Heart, ShieldCheck, ShoppingBag, Star, Tag, Truck } from 'lucide-react';
 import { useState } from 'react';
 import { ProductQuantitySelector } from './ProductQuantitySelector';
 
@@ -11,8 +13,20 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
+  const { addItem } = useCart();
+  const { hasItem, toggleItem } = useWishlist();
+
+  const isWishlisted = hasItem(product.id);
   const isOutOfStock = product.availability === 'out_of_stock' || product.stock === 0;
+
+  const handleAddToCart = () => {
+    if (isOutOfStock) return;
+    addItem(product, quantity);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2500);
+  };
 
   return (
     <div className="flex flex-col space-y-6 w-full">
@@ -85,7 +99,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         )}
       </div>
 
-      {/* Quantity Selector & Purchase Action Affordance */}
+      {/* Quantity Selector & Purchase Actions */}
       <div className="space-y-4 pt-2">
         <ProductQuantitySelector
           quantity={quantity}
@@ -94,19 +108,45 @@ export function ProductInfo({ product }: ProductInfoProps) {
           disabled={isOutOfStock}
         />
 
-        {/* Action Affordance (Cart Integration owned by Phase 07) */}
-        <div className="space-y-2">
+        <div className="flex items-center gap-3">
           <button
             type="button"
+            onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 disabled:pointer-events-none transition-all"
+            className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-ring ${
+              added
+                ? 'bg-emerald-600 text-white'
+                : 'bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none'
+            }`}
           >
-            <ShoppingBag className="h-4 w-4" />
-            <span>{isOutOfStock ? 'Out of Stock' : `Add ${quantity} to Cart`}</span>
+            {added ? (
+              <>
+                <Check className="h-4 w-4" />
+                <span>Added {quantity} to Cart!</span>
+              </>
+            ) : isOutOfStock ? (
+              <span>Out of Stock</span>
+            ) : (
+              <>
+                <ShoppingBag className="h-4 w-4" />
+                <span>Add {quantity} to Cart</span>
+              </>
+            )}
           </button>
-          <p className="text-[11px] text-center text-muted-foreground/80">
-            Cart & Wishlist actions will be integrated in Phase 07.
-          </p>
+
+          {/* Wishlist Toggle Button */}
+          <button
+            type="button"
+            onClick={() => toggleItem(product.id)}
+            aria-label={isWishlisted ? `Remove ${product.title} from wishlist` : `Add ${product.title} to wishlist`}
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all focus:outline-none focus:ring-2 focus:ring-ring ${
+              isWishlisted
+                ? 'border-rose-500/30 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
+                : 'border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
+            }`}
+          >
+            <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-rose-500' : ''}`} />
+          </button>
         </div>
       </div>
 

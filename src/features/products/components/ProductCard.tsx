@@ -1,7 +1,8 @@
 'use client';
 
+import { useWishlist } from '@/hooks/use-wishlist';
 import type { Product } from '@/types';
-import { Star, Tag } from 'lucide-react';
+import { Heart, Star, Tag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -12,6 +13,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, priority = false }: ProductCardProps) {
+  const { hasItem, toggleItem } = useWishlist();
+  const isWishlisted = hasItem(product.id);
+
   const [imageSrc, setImageSrc] = useState<string>(
     product.thumbnail || product.images[0] || '/placeholder.png'
   );
@@ -42,6 +46,20 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           />
         </Link>
 
+        {/* Wishlist Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleItem(product.id);
+          }}
+          aria-label={isWishlisted ? `Remove ${product.title} from wishlist` : `Add ${product.title} to wishlist`}
+          className="absolute top-2 right-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-muted-foreground backdrop-blur-xs hover:bg-background hover:text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-ring"
+        >
+          <Heart className={`h-4 w-4 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
+        </button>
+
         {/* Discount Badge */}
         {product.discountPercentage > 0 && (
           <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 rounded-full bg-destructive px-2.5 py-0.5 text-xs font-semibold text-destructive-foreground shadow-xs">
@@ -51,7 +69,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         )}
 
         {/* Availability Badge */}
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute bottom-2 right-2 z-10">
           {product.availability === 'out_of_stock' ? (
             <span className="inline-flex rounded-full bg-zinc-900/80 px-2 py-0.5 text-[10px] font-medium text-zinc-100 backdrop-blur-xs dark:bg-zinc-100/80 dark:text-zinc-900">
               Out of Stock

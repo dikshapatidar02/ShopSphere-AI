@@ -1,5 +1,5 @@
 import { getSafeStorage } from '@/lib/storage';
-import type { CartItem, CartSummary, Coupon, Product } from '@/types';
+import type { CartItem, CartItemAvailability, CartSummary, Coupon, Product } from '@/types';
 import { create } from 'zustand';
 
 export interface CartStoreState {
@@ -20,6 +20,7 @@ export interface CartStoreActions {
   applyCoupon(coupon: Coupon): void;
   removeCoupon(): void;
   loadUserCart(userId: string | null): void;
+  revalidateItems(productsMap: Map<string, Product>): void;
 }
 
 export type CartStore = CartStoreState & CartStoreActions;
@@ -262,5 +263,53 @@ export const useCartStore = create<CartStore>((set, get) => ({
     const summary = calculateSummary(items, null);
     set({ coupon: null, summary });
     persistCartData(activeUserId, items, get().savedItems, null);
+  },
+
+  revalidateItems: (productsMap: Map<string, Product>) => {
+    const { items, activeUserId, coupon } = get();
+    let changed = false;
+
+    const updatedItems: CartItem[] = items.map((item) => {
+      const liveProduct = productsMap.get(item.productId);
+      if (!liveProduct) return item;
+
+      const stock = Math.max(0, liveProduct.stock);
+      const isPriceDiff = Math.abs(liveProduct.discountedPrice - item.unitPrice) > 0.001;
+      const isOut = stock === 0 || liveProduct.availability === 'out_of_stock';
+      const isLow = stock > 0 && stock < 5;
+
+      const newAvailability: CartItemAvailability = isOut
+        ? 'out_of_stock'
+        : isPriceDiff
+        ? 'price_changed'
+        : isLow
+        ? 'low_stock'
+        : 'available';
+
+      const clampedQty = isOut ? item.quantity : Math.min(item.quantity, stock);
+
+      if (
+        item.maxAvailableStock !== stock ||
+        item.availability !== newAvailability ||
+        item.priceChanged !== isPriceDiff ||
+        item.quantity !== clampedQty
+      ) {
+        changed = true;
+        return {
+          ...item,
+          maxAvailableStock: stock,
+          availability: newAvailability,
+          priceChanged: isPriceDiff,
+          quantity: clampedQty,
+        };
+      }
+      return item;
+    });
+
+    if (changed) {
+      const summary = calculateSummary(updatedItems, coupon);
+      set({ items: updatedItems, summary });
+      persistCartData(activeUserId, updatedItems, get().savedItems, coupon);
+    }
   },
 }));
