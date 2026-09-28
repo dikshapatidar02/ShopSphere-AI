@@ -57,6 +57,12 @@ export class ProductService {
       return res;
     }
 
+    const mockRes = await this.mockFallbackProvider.getProductById(id);
+    if (mockRes.success) {
+      this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
+      return mockRes;
+    }
+
     const fallback = this.cache.getLastKnown<Product>(cacheKey);
     if (fallback) {
       return { success: true, data: fallback };
@@ -261,6 +267,44 @@ export class ProductService {
 
     this.cache.set(cacheKey, result, apiConfig.cacheTtlMs);
     return { success: true, data: result };
+  }
+
+  private mockFallbackProvider = new MockProductProvider();
+
+  public clearCache(): void {
+    this.cache.clear();
+  }
+
+  public async createProduct(productData: Omit<Product, 'id'>): Promise<ApiResponse<Product>> {
+    this.clearCache();
+    if (this.provider.createProduct) {
+      return this.provider.createProduct(productData);
+    }
+    return this.mockFallbackProvider.createProduct(productData);
+  }
+
+  public async updateProduct(id: string, updates: Partial<Product>): Promise<ApiResponse<Product>> {
+    this.clearCache();
+    if (this.provider.updateProduct) {
+      return this.provider.updateProduct(id, updates);
+    }
+    return this.mockFallbackProvider.updateProduct(id, updates);
+  }
+
+  public async deleteProduct(id: string): Promise<ApiResponse<{ readonly id: string }>> {
+    this.clearCache();
+    if (this.provider.deleteProduct) {
+      return this.provider.deleteProduct(id);
+    }
+    return this.mockFallbackProvider.deleteProduct(id);
+  }
+
+  public async updateInventory(id: string, stock: number): Promise<ApiResponse<Product>> {
+    this.clearCache();
+    if (this.provider.updateInventory) {
+      return this.provider.updateInventory(id, stock);
+    }
+    return this.mockFallbackProvider.updateInventory(id, stock);
   }
 }
 

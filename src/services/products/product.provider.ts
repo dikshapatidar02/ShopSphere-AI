@@ -26,4 +26,8 @@ export interface IProductProvider {
     category: string,
     params?: GetProductsParams
   ): Promise<ApiResponse<ProductListResponse>>;
+  createProduct?(productData: Omit<Product, 'id'>): Promise<ApiResponse<Product>>;
+  updateProduct?(id: string, updates: Partial<Product>): Promise<ApiResponse<Product>>;
+  deleteProduct?(id: string): Promise<ApiResponse<{ readonly id: string }>>;
+  updateInventory?(id: string, stock: number): Promise<ApiResponse<Product>>;
 }
