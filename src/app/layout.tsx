@@ -1,4 +1,5 @@
 import { QueryProvider } from "@/components/providers/query-provider";
+import { AssistantPanel } from "@/features/ai-assistant";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-full flex flex-col bg-background text-foreground`}>
         <QueryProvider>
           {children}
+          <AssistantPanel />
         </QueryProvider>
       </body>
     </html>
