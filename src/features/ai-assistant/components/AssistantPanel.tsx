@@ -1,6 +1,6 @@
 'use client';
 
-import { Bot } from 'lucide-react';
+import { Bot, Sparkles } from 'lucide-react';
 import { useEffect } from 'react';
 import { useAssistant } from '../hooks/use-assistant';
 import { AssistantEmptyState } from './AssistantEmptyState';
@@ -35,22 +35,26 @@ export function AssistantPanel() {
 
   return (
     <>
-      {/* Floating Trigger Button */}
+      {/* Floating Trigger Button with AI Sparkle Badge */}
       <button
         type="button"
+        id="ai-assistant-trigger"
         onClick={toggleOpen}
         aria-label={isOpen ? 'Close AI Assistant' : 'Open AI Shopping Assistant'}
         aria-expanded={isOpen}
-        className="fixed bottom-6 right-6 z-50 flex h-13 w-13 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-ring"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xl hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 group"
       >
-        <Bot className="h-6 w-6" />
+        <Bot className="h-6 w-6 group-hover:rotate-12 transition-transform" />
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-slate-900 shadow-xs">
+          <Sparkles className="h-3 w-3" />
+        </span>
       </button>
 
       {/* Side Panel / Drawer */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-background/40 backdrop-blur-xs sm:p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs sm:p-4 animate-in fade-in duration-200">
           <div
-            className="flex h-full w-full sm:max-w-md flex-col rounded-none sm:rounded-xl border border-border bg-card shadow-2xl overflow-hidden"
+            className="flex h-full w-full sm:max-w-md flex-col rounded-none sm:rounded-2xl border border-border/80 bg-card shadow-2xl overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label="AI Shopping Assistant"

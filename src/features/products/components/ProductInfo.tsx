@@ -1,19 +1,20 @@
 'use client';
 
+import { announceToScreenReader } from '@/components/common/AccessibilityAnnouncer';
 import { useCart } from '@/hooks/use-cart';
 import { useWishlist } from '@/hooks/use-wishlist';
 import type { Product } from '@/types';
-import { Check, Heart, ShieldCheck, ShoppingBag, Star, Tag, Truck } from 'lucide-react';
+import { ArrowRight, Check, Heart, ShieldCheck, ShoppingBag, Star, Tag, Truck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ProductQuantitySelector } from './ProductQuantitySelector';
-
-import { announceToScreenReader } from '@/components/common/AccessibilityAnnouncer';
 
 interface ProductInfoProps {
   readonly product: Product;
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -31,73 +32,79 @@ export function ProductInfo({ product }: ProductInfoProps) {
     setTimeout(() => setAdded(false), 2500);
   };
 
+  const handleBuyNow = () => {
+    if (isOutOfStock) return;
+    addItem(product, quantity);
+    router.push('/checkout');
+  };
+
   return (
     <div className="flex flex-col space-y-6 w-full">
       {/* Brand & Category */}
-      <div className="space-y-1">
-        <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
           <span>{product.brand}</span>
-          <span className="rounded-full bg-secondary px-2.5 py-0.5 text-[10px] text-secondary-foreground">
+          <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
             {product.categoryName || product.category}
           </span>
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl leading-tight">
           {product.title}
         </h1>
       </div>
 
       {/* Rating & Review Count */}
       <div className="flex items-center gap-3 text-sm">
-        <div className="flex items-center gap-1 bg-amber-500/10 px-2.5 py-1 rounded-md text-amber-600 dark:text-amber-400 font-semibold" aria-label={`Rated ${product.rating} out of 5 stars`}>
+        <div className="flex items-center gap-1.5 bg-amber-500/10 px-3 py-1 rounded-full text-amber-600 dark:text-amber-400 font-extrabold" aria-label={`Rated ${product.rating} out of 5 stars`}>
           <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
           <span>{product.rating.toFixed(1)}</span>
         </div>
-        <span className="text-xs text-muted-foreground">
-          Based on <strong className="text-foreground">{product.reviewCount}</strong> verified reviews
+        <span className="text-xs text-slate-500 font-medium">
+          Based on <strong className="text-slate-900 dark:text-white font-bold">{product.reviewCount}</strong> verified customer reviews
         </span>
       </div>
 
       {/* Pricing Section */}
-      <div className="space-y-1 border-y border-border py-4">
+      <div className="space-y-2 border-y border-border/80 py-5">
         <div className="flex items-baseline gap-3">
-          <span className="text-3xl font-extrabold text-foreground">
+          <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
             ${product.discountedPrice.toFixed(2)}
           </span>
           {product.discountPercentage > 0 && (
             <>
-              <span className="text-base text-muted-foreground line-through">
+              <span className="text-lg text-slate-400 line-through font-medium">
                 ${product.price.toFixed(2)}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-bold text-destructive">
-                <Tag className="h-3 w-3" />
+              <span className="inline-flex items-center gap-1 rounded-full bg-rose-600/10 px-3 py-1 text-xs font-extrabold text-rose-600 uppercase tracking-wide">
+                <Tag className="h-3.5 w-3.5" />
                 Save {Math.round(product.discountPercentage)}%
               </span>
             </>
           )}
         </div>
-        <p className="text-[11px] text-muted-foreground">
-          Includes all applicable taxes. Free shipping on orders over $100.
+        <p className="text-xs text-slate-400 font-medium">
+          Taxes included. Free express shipping on orders over $50.
         </p>
       </div>
 
       {/* Stock & Availability Status */}
       <div className="flex items-center gap-3">
         {isOutOfStock ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900/10 dark:bg-zinc-100/10 px-3 py-1 text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-            <span className="h-2 w-2 rounded-full bg-zinc-500" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/10 dark:bg-slate-100/10 px-3 py-1 text-xs font-bold text-slate-700 dark:text-slate-300">
+            <span className="h-2 w-2 rounded-full bg-slate-500" />
             Currently Out of Stock
           </span>
         ) : product.availability === 'low_stock' ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">
             <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
-            Low Stock — Only {product.stock} left in stock
+            Low Stock — Only {product.stock} left in inventory
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <Check className="h-3.5 w-3.5" />
-            In Stock ({product.stock} available)
+            In Stock ({product.stock} units available)
           </span>
         )}
       </div>
@@ -111,15 +118,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
           disabled={isOutOfStock}
         />
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
           <button
             type="button"
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-ring ${
+            className={`w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               added
                 ? 'bg-emerald-600 text-white'
-                : 'bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none'
+                : 'bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none'
             }`}
           >
             {added ? (
@@ -137,15 +144,25 @@ export function ProductInfo({ product }: ProductInfoProps) {
             )}
           </button>
 
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            disabled={isOutOfStock}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-white px-6 py-3.5 text-sm font-bold shadow-md transition-all disabled:opacity-50"
+          >
+            <span>Buy Now</span>
+            <ArrowRight className="h-4 w-4" />
+          </button>
+
           {/* Wishlist Toggle Button */}
           <button
             type="button"
             onClick={() => toggleItem(product.id)}
             aria-label={isWishlisted ? `Remove ${product.title} from wishlist` : `Add ${product.title} to wishlist`}
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all focus:outline-none focus:ring-2 focus:ring-ring ${
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               isWishlisted
                 ? 'border-rose-500/30 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
-                : 'border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
+                : 'border-border bg-background text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800'
             }`}
           >
             <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-rose-500' : ''}`} />
@@ -154,14 +171,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Trust Badges */}
-      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border/60 text-xs text-muted-foreground">
+      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border/60 text-xs text-slate-500 font-medium">
         <div className="flex items-center gap-2">
-          <Truck className="h-4 w-4 text-primary shrink-0" />
+          <Truck className="h-4 w-4 text-blue-600 shrink-0" />
           <span>Fast 2-3 Day Express Shipping</span>
         </div>
         <div className="flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
-          <span>1 Year Standard Warranty</span>
+          <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+          <span>1 Year Guarantee Included</span>
         </div>
       </div>
     </div>
