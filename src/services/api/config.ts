@@ -7,7 +7,7 @@ export interface ApiConfig {
 
 export const apiConfig: ApiConfig = {
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://dummyjson.com',
-  defaultProvider: (process.env.NEXT_PUBLIC_DATA_PROVIDER as 'dummyjson' | 'mock') || 'dummyjson',
+  defaultProvider: (process.env.NEXT_PUBLIC_DATA_PROVIDER as 'dummyjson' | 'mock') || 'mock',
   cacheTtlMs: (Number(process.env.NEXT_PUBLIC_CACHE_TTL_SECONDS) || 300) * 1000,
   defaultTimeoutMs: 10000,
 };

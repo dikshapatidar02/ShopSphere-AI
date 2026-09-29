@@ -32,6 +32,12 @@ export class ProductService {
       return res;
     }
 
+    const mockRes = await this.mockFallbackProvider.getProducts(params);
+    if (mockRes.success) {
+      this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
+      return mockRes;
+    }
+
     const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
     if (fallback) {
       return { success: true, data: fallback };
@@ -92,6 +98,12 @@ export class ProductService {
       return res;
     }
 
+    const mockRes = await this.mockFallbackProvider.searchProducts(query, params);
+    if (mockRes.success) {
+      this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
+      return mockRes;
+    }
+
     const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
     if (fallback) {
       return { success: true, data: fallback };
@@ -115,6 +127,12 @@ export class ProductService {
     if (res.success) {
       this.cache.set(cacheKey, res.data, apiConfig.cacheTtlMs);
       return res;
+    }
+
+    const mockRes = await this.mockFallbackProvider.getProductsByCategory(category, params);
+    if (mockRes.success) {
+      this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
+      return mockRes;
     }
 
     const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
@@ -148,6 +166,16 @@ export class ProductService {
       baseRes = await this.provider.getProductsByCategory(category, { limit: 100, skip: 0, signal });
     } else {
       baseRes = await this.provider.getProducts({ limit: 100, skip: 0, signal });
+    }
+
+    if (!baseRes.success) {
+      if (q.length > 0) {
+        baseRes = await this.mockFallbackProvider.searchProducts(q, { limit: 100, skip: 0 });
+      } else if (category.length > 0 && category !== 'all') {
+        baseRes = await this.mockFallbackProvider.getProductsByCategory(category, { limit: 100, skip: 0 });
+      } else {
+        baseRes = await this.mockFallbackProvider.getProducts({ limit: 100, skip: 0 });
+      }
     }
 
     if (!baseRes.success) {

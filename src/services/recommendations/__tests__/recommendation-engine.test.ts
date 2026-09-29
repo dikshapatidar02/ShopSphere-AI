@@ -263,6 +263,12 @@ describe('All 9 Recommendation Strategies Engine Test', () => {
     expect(res.items.length).toBeGreaterThan(0);
     expect(res.total).toBe(res.items.length);
   });
+
+  it('handles empty product database safely without error', () => {
+    const res = engine.execute({}, 'trending', []);
+    expect(res.items).toEqual([]);
+    expect(res.total).toBe(0);
+  });
 });
 
 describe('RecommendationService & Provider Integration', () => {

@@ -8,8 +8,14 @@ describe('QueryNormalizer', () => {
     expect(QueryNormalizer.normalize('Show smartphones under ₹30,000')).toBe(
       'show smartphones under rs 30000'
     );
+    expect(QueryNormalizer.normalize('Laptops within $500')).toBe(
+      'laptops within usd 500'
+    );
     expect(QueryNormalizer.normalize('Laptops within 70k')).toBe(
       'laptops within 70000'
+    );
+    expect(QueryNormalizer.normalize('Laptops within 2 lakh')).toBe(
+      'laptops within 200000'
     );
     expect(QueryNormalizer.normalize('Earphones below 1.5k')).toBe(
       'headphones below 1500'
@@ -35,6 +41,7 @@ describe('EntityExtractor', () => {
   it('extracts product references correctly', () => {
     expect(EntityExtractor.extract('add the first one to cart').productReference).toBe(0);
     expect(EntityExtractor.extract('tell me about the second one').productReference).toBe(1);
+    expect(EntityExtractor.extract('tell me about the third one').productReference).toBe(2);
     expect(EntityExtractor.extract('compare item 1 and item 2').comparisonIndexes).toEqual([0, 1]);
   });
 });
@@ -49,6 +56,7 @@ describe('IntentParser', () => {
     expect(IntentParser.parse('Clear filters').type).toBe('clear_filters');
     expect(IntentParser.parse('Help me').type).toBe('help');
     expect(IntentParser.parse('Something cheaper', true).type).toBe('refine_results');
+    expect(IntentParser.parse('headphones instead', true).type).toBe('refine_results');
     expect(IntentParser.parse('random gibberish 12345').type).toBe('unknown');
   });
 });

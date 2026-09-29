@@ -59,4 +59,23 @@ describe('Product Mapper / Normalizer', () => {
     expect(product.availability).toBe('out_of_stock');
     expect(product.thumbnail).toContain('placeholder');
   });
+
+  it('should handle invalid numeric values like negative prices, NaNs, or nulls', () => {
+    const malformedDto: Record<string, unknown> = {
+      id: 99,
+      title: 'Broken Numbers',
+      price: -50,
+      discountPercentage: 150, // invalid discount > 100
+      rating: -2,
+      stock: 'invalid-number',
+    };
+
+    const product = normalizeProduct(malformedDto);
+    expect(product.price).toBeGreaterThanOrEqual(0);
+    expect(product.rating).toBeGreaterThanOrEqual(0);
+    expect(product.discountedPrice).toBeGreaterThanOrEqual(0);
+    expect(product.stock).toBeGreaterThanOrEqual(0);
+    expect(product.availability).toBe('out_of_stock');
+  });
 });
+
