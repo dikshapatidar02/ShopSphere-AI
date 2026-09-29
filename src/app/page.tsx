@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
-      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
+      <main id="main-content" className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
         <Suspense fallback={<div className="p-8 text-center text-sm text-muted-foreground">Loading storefront...</div>}>
           <ProductDiscoveryView />
         </Suspense>

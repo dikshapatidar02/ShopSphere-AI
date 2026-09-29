@@ -32,15 +32,15 @@ export class ProductService {
       return res;
     }
 
+    const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
+    if (fallback) {
+      return { success: true, data: fallback };
+    }
+
     const mockRes = await this.mockFallbackProvider.getProducts(params);
     if (mockRes.success) {
       this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
       return mockRes;
-    }
-
-    const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
-    if (fallback) {
-      return { success: true, data: fallback };
     }
 
     return res;
@@ -63,15 +63,15 @@ export class ProductService {
       return res;
     }
 
+    const fallback = this.cache.getLastKnown<Product>(cacheKey);
+    if (fallback) {
+      return { success: true, data: fallback };
+    }
+
     const mockRes = await this.mockFallbackProvider.getProductById(id);
     if (mockRes.success) {
       this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
       return mockRes;
-    }
-
-    const fallback = this.cache.getLastKnown<Product>(cacheKey);
-    if (fallback) {
-      return { success: true, data: fallback };
     }
 
     return res;
@@ -98,15 +98,15 @@ export class ProductService {
       return res;
     }
 
+    const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
+    if (fallback) {
+      return { success: true, data: fallback };
+    }
+
     const mockRes = await this.mockFallbackProvider.searchProducts(query, params);
     if (mockRes.success) {
       this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
       return mockRes;
-    }
-
-    const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
-    if (fallback) {
-      return { success: true, data: fallback };
     }
 
     return res;
@@ -129,15 +129,15 @@ export class ProductService {
       return res;
     }
 
+    const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
+    if (fallback) {
+      return { success: true, data: fallback };
+    }
+
     const mockRes = await this.mockFallbackProvider.getProductsByCategory(category, params);
     if (mockRes.success) {
       this.cache.set(cacheKey, mockRes.data, apiConfig.cacheTtlMs);
       return mockRes;
-    }
-
-    const fallback = this.cache.getLastKnown<ProductListResponse>(cacheKey);
-    if (fallback) {
-      return { success: true, data: fallback };
     }
 
     return res;

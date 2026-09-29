@@ -20,25 +20,37 @@ export function ProductDeleteDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-xs p-4">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl space-y-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-xs p-4"
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' && !isDeleting) onClose();
+      }}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl space-y-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-destructive">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
               <AlertTriangle className="h-5 w-5" />
             </div>
-            <h3 className="text-base font-bold text-foreground">Confirm Product Deletion</h3>
+            <h3 id="delete-dialog-title" className="text-base font-bold text-foreground">Confirm Product Deletion</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close dialog"
             className="rounded-lg p-1 text-muted-foreground hover:bg-muted"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <p className="text-xs text-muted-foreground leading-relaxed">
+        <p id="delete-dialog-description" className="text-xs text-muted-foreground leading-relaxed">
           Are you sure you want to delete <strong className="text-foreground">{productTitle}</strong>?
         </p>
 

@@ -1,3 +1,4 @@
+import { AccessibilityAnnouncer } from "@/components/common/AccessibilityAnnouncer";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { AssistantPanel } from "@/features/ai-assistant";
 import type { Metadata } from "next";
@@ -20,9 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className={`${inter.className} min-h-full flex flex-col bg-background text-foreground`}>
+        <a href="#main-content" className="sr-only sr-only-focusable">
+          Skip to main content
+        </a>
         <QueryProvider>
           {children}
           <AssistantPanel />
+          <AccessibilityAnnouncer />
         </QueryProvider>
       </body>
     </html>

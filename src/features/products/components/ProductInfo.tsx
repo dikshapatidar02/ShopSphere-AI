@@ -7,6 +7,8 @@ import { Check, Heart, ShieldCheck, ShoppingBag, Star, Tag, Truck } from 'lucide
 import { useState } from 'react';
 import { ProductQuantitySelector } from './ProductQuantitySelector';
 
+import { announceToScreenReader } from '@/components/common/AccessibilityAnnouncer';
+
 interface ProductInfoProps {
   readonly product: Product;
 }
@@ -25,6 +27,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
     if (isOutOfStock) return;
     addItem(product, quantity);
     setAdded(true);
+    announceToScreenReader(`Added ${quantity} ${quantity === 1 ? 'item' : 'items'} of ${product.title} to cart`);
     setTimeout(() => setAdded(false), 2500);
   };
 
