@@ -39,7 +39,7 @@ export function Header() {
       {/* Top Announcement Bar */}
       <div className="bg-slate-900 text-slate-200 text-[11px] font-medium py-1.5 px-4 text-center tracking-wide flex items-center justify-center gap-2">
         <Sparkles className="h-3.5 w-3.5 text-amber-400 animate-pulse" />
-        <span>Free Express Shipping on Orders Over $50 • Use code <strong className="text-white">SHOPSPHERE20</strong> for 20% OFF</span>
+        <span>Personalized AI E-Commerce Storefront • Use coupon code <strong className="text-white">SHOPSPHERE20</strong> for 20% OFF</span>
       </div>
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

@@ -98,14 +98,14 @@ export function CartSummary({
             <ArrowRight className="h-4 w-4" />
           </Link>
           <p className="text-[11px] text-center text-slate-400 font-medium">
-            30-day money back guarantee & 256-bit encryption.
+            Secure checkout & easy order management.
           </p>
         </div>
 
         {/* Guarantee Badge */}
         <div className="flex items-center justify-center gap-2 pt-2 text-[11px] text-slate-500 font-semibold border-t border-border/60">
           <ShieldCheck className="h-4 w-4 text-emerald-500" />
-          <span>Secure SSL Encrypted Checkout</span>
+          <span>Safe & Secure Checkout</span>
         </div>
       </div>
     </aside>

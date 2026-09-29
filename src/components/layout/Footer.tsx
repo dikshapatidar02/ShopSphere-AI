@@ -13,8 +13,8 @@ export function Footer() {
                 <Truck className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Free Express Delivery</h4>
-                <p className="text-xs text-slate-400">On all orders over $50</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Fast Order Processing</h4>
+                <p className="text-xs text-slate-400">Calculated checkout rates</p>
               </div>
             </div>
 
@@ -23,8 +23,8 @@ export function Footer() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Secure Payment Guarantee</h4>
-                <p className="text-xs text-slate-400">256-bit SSL encrypted checkout</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Secure Checkout</h4>
+                <p className="text-xs text-slate-400">Safe order experience</p>
               </div>
             </div>
 
@@ -33,8 +33,8 @@ export function Footer() {
                 <RefreshCw className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">30-Day Free Returns</h4>
-                <p className="text-xs text-slate-400">Hassle-free money back guarantee</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Easy Order Management</h4>
+                <p className="text-xs text-slate-400">Track and manage purchases</p>
               </div>
             </div>
 
@@ -43,8 +43,8 @@ export function Footer() {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">24/7 AI Concierge</h4>
-                <p className="text-xs text-slate-400">Instant shopping assistance</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">AI Shopping Assistant</h4>
+                <p className="text-xs text-slate-400">Instant catalog discovery</p>
               </div>
             </div>
           </div>
