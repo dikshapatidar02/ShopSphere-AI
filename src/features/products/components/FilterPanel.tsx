@@ -71,15 +71,15 @@ export function FilterPanel({
   const content = (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-3">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-primary" />
-          <h3 className="font-semibold text-foreground text-sm uppercase tracking-wider">Filters</h3>
+          <Filter className="h-4 w-4 text-blue-600" />
+          <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Filters</h3>
         </div>
         {hasActiveFilters && (
           <button
             onClick={onResetAll}
-            className="flex items-center gap-1 text-xs font-medium text-destructive hover:underline focus:outline-none"
+            className="flex items-center gap-1 text-xs font-bold text-rose-600 hover:underline focus:outline-none"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Reset</span>
@@ -90,7 +90,7 @@ export function FilterPanel({
       {/* Category Filter */}
       {availableCategories.length > 0 && (
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-foreground uppercase tracking-wider block">
+          <label className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
             Category
           </label>
           <select
@@ -98,7 +98,7 @@ export function FilterPanel({
             onChange={(e) =>
               onQueryChange({ category: e.target.value || undefined, page: 1 })
             }
-            className="w-full rounded-lg border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 font-medium focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
           >
             <option value="">All Categories</option>
             {availableCategories.map((c) => (
@@ -112,7 +112,7 @@ export function FilterPanel({
 
       {/* Price Filter */}
       <div className="space-y-3">
-        <label className="text-xs font-semibold text-foreground uppercase tracking-wider block">
+        <label className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
           Price Range ($)
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -125,7 +125,7 @@ export function FilterPanel({
               setMinPriceInput(e.target.value);
               setPriceError(null);
             }}
-            className="w-full rounded-lg border border-input bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
           <input
             type="number"
@@ -136,13 +136,13 @@ export function FilterPanel({
               setMaxPriceInput(e.target.value);
               setPriceError(null);
             }}
-            className="w-full rounded-lg border border-input bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
-        {priceError && <p className="text-[11px] text-destructive leading-tight">{priceError}</p>}
+        {priceError && <p className="text-[11px] text-rose-600 font-medium leading-tight">{priceError}</p>}
         <button
           onClick={handlePriceApply}
-          className="w-full rounded-lg bg-secondary py-1.5 text-xs font-medium text-secondary-foreground hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+          className="w-full rounded-lg bg-slate-900 hover:bg-slate-800 text-white py-1.5 text-xs font-bold focus:outline-none transition-colors"
         >
           Apply Price
         </button>
@@ -150,7 +150,7 @@ export function FilterPanel({
 
       {/* Rating Filter */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold text-foreground uppercase tracking-wider block">
+        <label className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
           Minimum Rating
         </label>
         <div className="space-y-1">
@@ -167,15 +167,15 @@ export function FilterPanel({
                 }
                 className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors focus:outline-none ${
                   isSelected
-                    ? 'bg-primary/10 text-primary font-medium border border-primary/30'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
+                    : 'text-slate-700 font-medium hover:bg-slate-100 hover:text-slate-900 border border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-1">
                   <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                   <span>{stars} Stars & Above</span>
                 </div>
-                {isSelected && <span className="text-xs">✓</span>}
+                {isSelected && <span className="text-xs font-bold text-blue-700">✓</span>}
               </button>
             );
           })}
@@ -185,7 +185,7 @@ export function FilterPanel({
       {/* Brand Filter */}
       {availableBrands.length > 0 && (
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-foreground uppercase tracking-wider block">
+          <label className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
             Brand
           </label>
           <select
@@ -193,7 +193,7 @@ export function FilterPanel({
             onChange={(e) =>
               onQueryChange({ brand: e.target.value || undefined, page: 1 })
             }
-            className="w-full rounded-lg border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 font-medium focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
           >
             <option value="">All Brands</option>
             {availableBrands.map((b) => (
@@ -207,7 +207,7 @@ export function FilterPanel({
 
       {/* Availability Filter */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold text-foreground uppercase tracking-wider block">
+        <label className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
           Availability
         </label>
         <div className="flex flex-wrap gap-1.5">
@@ -222,10 +222,10 @@ export function FilterPanel({
               <button
                 key={opt}
                 onClick={() => onQueryChange({ availability: opt, page: 1 })}
-                className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors focus:outline-none ${
+                className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors focus:outline-none ${
                   isSelected
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                    ? 'bg-blue-600 text-white font-bold'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                 }`}
               >
                 {labelMap[opt]}
@@ -240,17 +240,17 @@ export function FilterPanel({
   return (
     <>
       {/* Desktop Filter Panel */}
-      <aside className="hidden lg:block w-64 shrink-0 rounded-xl border border-border bg-card p-5 shadow-xs h-fit">
+      <aside className="hidden lg:block w-64 shrink-0 rounded-xl border border-slate-200 bg-white p-5 shadow-xs h-fit">
         {content}
       </aside>
 
       {/* Mobile Drawer Overlay */}
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden bg-background/80 backdrop-blur-xs">
-          <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-card p-6 shadow-xl border-l border-border">
+        <div className="fixed inset-0 z-50 flex lg:hidden bg-slate-900/50 backdrop-blur-xs">
+          <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white p-6 shadow-xl border-l border-slate-200">
             <button
               onClick={onCloseMobile}
-              className="absolute right-4 top-4 p-1 rounded-full text-muted-foreground hover:bg-muted"
+              className="absolute right-4 top-4 p-1 rounded-full text-slate-500 hover:bg-slate-100"
             >
               <X className="h-5 w-5" />
             </button>

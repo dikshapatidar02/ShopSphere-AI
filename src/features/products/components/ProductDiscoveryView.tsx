@@ -97,31 +97,27 @@ export function ProductDiscoveryView() {
     <div className="space-y-10">
       {/* Hero Campaign Showcase (Shown on Default Unfiltered Home Page) */}
       {isDefaultView && (
-        <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white p-8 sm:p-12 lg:p-16 border border-slate-800 shadow-2xl">
-          {/* Subtle Ambient Background Gradients */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 -mb-20 h-80 w-80 rounded-full bg-indigo-600/20 blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/30 text-slate-900 p-8 sm:p-12 lg:p-14 border border-slate-200 shadow-xs">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Hero Left Content */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 border border-blue-500/20 px-3.5 py-1 text-xs font-bold text-blue-400 tracking-wide uppercase">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Next-Gen E-Commerce Platform</span>
+              <div className="inline-flex items-center gap-2 rounded-lg bg-blue-100/80 border border-blue-200 px-3.5 py-1 text-xs font-bold text-blue-700 tracking-wide uppercase">
+                <Sparkles className="h-3.5 w-3.5 text-blue-600" />
+                <span>Next-Gen E-Commerce Catalog</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-none">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 Intelligent Tech & Lifestyle Catalog.
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-xl">
-                Experience personalized recommendations, real-time catalog search, and 24/7 conversational shopping assistance built for the modern Web.
+              <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-xl">
+                Experience personalized recommendations, real-time catalog search, and conversational shopping assistance built for the modern Web.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
                   href="/products"
-                  className="h-12 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm inline-flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02]"
+                  className="h-11 px-5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm inline-flex items-center gap-2 shadow-xs transition-all"
                 >
                   <span>Explore Catalog</span>
                   <ArrowRight className="h-4 w-4" />
@@ -134,55 +130,55 @@ export function ProductDiscoveryView() {
                     const triggerBtn = document.querySelector('[aria-label="Open AI Assistant"]') as HTMLButtonElement;
                     if (triggerBtn) triggerBtn.click();
                   }}
-                  className="h-12 px-6 rounded-2xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-200 font-bold text-sm inline-flex items-center gap-2 transition-all"
+                  className="h-11 px-5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold text-sm inline-flex items-center gap-2 shadow-xs transition-all"
                 >
-                  <Bot className="h-4 w-4 text-blue-400" />
+                  <Bot className="h-4 w-4 text-blue-600" />
                   <span>Ask AI Assistant</span>
                 </a>
               </div>
 
               {/* Service Badges */}
-              <div className="pt-6 border-t border-slate-800/80 grid grid-cols-3 gap-4 text-xs font-semibold text-slate-400">
+              <div className="pt-6 border-t border-slate-200/80 grid grid-cols-3 gap-4 text-xs font-semibold text-slate-600">
                 <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-blue-400" />
-                  <span>Express Dispatch</span>
+                  <Truck className="h-4 w-4 text-blue-600" />
+                  <span>Standard Shipping</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                  <span>Verified Quality</span>
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                  <span>Product Catalog</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-amber-400" />
-                  <span>AI Powered</span>
+                  <Sparkles className="h-4 w-4 text-amber-600" />
+                  <span>AI Assisted</span>
                 </div>
               </div>
             </div>
 
             {/* Hero Right Feature Card Grid */}
             <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3 shadow-lg">
-                <div className="h-10 w-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-lg">
+              <div className="p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-xs">
+                <div className="h-9 w-9 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center font-extrabold text-sm">
                   9+
                 </div>
-                <h3 className="font-bold text-white text-sm">Smart Recommendation Engines</h3>
-                <p className="text-xs text-slate-400 leading-snug">Personalized candidate scoring based on signals & cart metrics.</p>
+                <h3 className="font-bold text-slate-900 text-sm">Smart Recommendation Engines</h3>
+                <p className="text-xs text-slate-600 leading-snug font-medium">Personalized candidate scoring based on signals & cart metrics.</p>
               </div>
 
-              <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3 shadow-lg">
-                <div className="h-10 w-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-lg">
+              <div className="p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-xs">
+                <div className="h-9 w-9 rounded-lg bg-purple-50 text-purple-600 border border-purple-200 flex items-center justify-center font-extrabold text-sm">
                   100%
                 </div>
-                <h3 className="font-bold text-white text-sm">Strict Type Safety</h3>
-                <p className="text-xs text-slate-400 leading-snug">Built with TypeScript schemas & deterministic data mappers.</p>
+                <h3 className="font-bold text-slate-900 text-sm">Strict Type Safety</h3>
+                <p className="text-xs text-slate-600 leading-snug font-medium">Built with TypeScript schemas & deterministic data mappers.</p>
               </div>
 
-              <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3 shadow-lg col-span-2 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex-shrink-0 flex items-center justify-center">
-                  <ShieldCheck className="h-6 w-6" />
+              <div className="p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-xs col-span-2 flex items-center gap-4">
+                <div className="h-11 w-11 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex-shrink-0 flex items-center justify-center">
+                  <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-sm">Enterprise Performance & Security</h3>
-                  <p className="text-xs text-slate-400 leading-snug">WCAG 2.2 AA accessibility, zero committed secrets & 0 lint errors.</p>
+                  <h3 className="font-bold text-slate-900 text-sm">Enterprise Performance & Security</h3>
+                  <p className="text-xs text-slate-600 leading-snug font-medium">WCAG 2.2 AA accessibility, zero committed secrets & 0 lint errors.</p>
                 </div>
               </div>
             </div>

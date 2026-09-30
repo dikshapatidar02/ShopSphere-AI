@@ -25,7 +25,7 @@ export function AssistantMessage({ message, onSelectPrompt }: AssistantMessagePr
       {/* Avatar */}
       <div
         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-          isUser ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary'
+          isUser ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 border border-blue-200'
         }`}
       >
         {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -34,15 +34,15 @@ export function AssistantMessage({ message, onSelectPrompt }: AssistantMessagePr
       {/* Bubble Content */}
       <div className="flex max-w-[85%] flex-col space-y-2">
         <div
-          className={`rounded-2xl px-3.5 py-2.5 shadow-xs leading-relaxed ${
+          className={`rounded-2xl px-3.5 py-2.5 shadow-xs leading-relaxed font-medium ${
             isUser
-              ? 'bg-primary text-primary-foreground rounded-tr-none'
-              : 'bg-card border border-border text-foreground rounded-tl-none'
+              ? 'bg-blue-600 text-white rounded-tr-none'
+              : 'bg-slate-100 border border-slate-200 text-slate-900 rounded-tl-none'
           }`}
         >
           <p className="whitespace-pre-wrap">
             {message.content.split('**').map((part, idx) =>
-              idx % 2 === 1 ? <strong key={idx}>{part}</strong> : part
+              idx % 2 === 1 ? <strong key={idx} className="font-extrabold">{part}</strong> : part
             )}
           </p>
 
@@ -62,7 +62,7 @@ export function AssistantMessage({ message, onSelectPrompt }: AssistantMessagePr
         )}
 
         <span
-          className={`text-[10px] text-muted-foreground ${
+          className={`text-[10px] font-medium text-slate-500 ${
             isUser ? 'text-right' : 'text-left'
           }`}
         >

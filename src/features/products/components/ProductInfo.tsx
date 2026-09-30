@@ -42,34 +42,34 @@ export function ProductInfo({ product }: ProductInfoProps) {
     <div className="flex flex-col space-y-6 w-full">
       {/* Brand & Category */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+        <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-blue-600">
           <span>{product.brand}</span>
-          <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+          <span className="rounded-md bg-slate-100 border border-slate-200 px-3 py-1 text-[11px] font-bold text-slate-700">
             {product.categoryName || product.category}
           </span>
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl leading-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-snug">
           {product.title}
         </h1>
       </div>
 
       {/* Rating & Review Count */}
       <div className="flex items-center gap-3 text-sm">
-        <div className="flex items-center gap-1.5 bg-amber-500/10 px-3 py-1 rounded-full text-amber-600 dark:text-amber-400 font-extrabold" aria-label={`Rated ${product.rating} out of 5 stars`}>
+        <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-1 rounded-md text-amber-800 font-extrabold" aria-label={`Rated ${product.rating} out of 5 stars`}>
           <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
           <span>{product.rating.toFixed(1)}</span>
         </div>
-        <span className="text-xs text-slate-500 font-medium">
-          Based on <strong className="text-slate-900 dark:text-white font-bold">{product.reviewCount}</strong> verified customer reviews
+        <span className="text-xs text-slate-600 font-medium">
+          Based on <strong className="text-slate-900 font-bold">{product.reviewCount}</strong> verified customer reviews
         </span>
       </div>
 
       {/* Pricing Section */}
-      <div className="space-y-2 border-y border-border/80 py-5">
+      <div className="space-y-2 border-y border-slate-200 py-4">
         <div className="flex items-baseline gap-3">
-          <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+          <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">
             ${product.discountedPrice.toFixed(2)}
           </span>
           {product.discountPercentage > 0 && (
@@ -77,14 +77,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
               <span className="text-lg text-slate-400 line-through font-medium">
                 ${product.price.toFixed(2)}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-rose-600/10 px-3 py-1 text-xs font-extrabold text-rose-600 uppercase tracking-wide">
+              <span className="inline-flex items-center gap-1 rounded-md bg-rose-50 border border-rose-200 px-2.5 py-1 text-xs font-extrabold text-rose-700 uppercase tracking-wide">
                 <Tag className="h-3.5 w-3.5" />
                 Save {Math.round(product.discountPercentage)}%
               </span>
             </>
           )}
         </div>
-        <p className="text-xs text-slate-400 font-medium">
+        <p className="text-xs text-slate-500 font-medium">
           Taxes included. Standard shipping options calculated at checkout.
         </p>
       </div>
@@ -92,18 +92,18 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Stock & Availability Status */}
       <div className="flex items-center gap-3">
         {isOutOfStock ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/10 dark:bg-slate-100/10 px-3 py-1 text-xs font-bold text-slate-700 dark:text-slate-300">
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-slate-100 border border-slate-200 px-3 py-1 text-xs font-bold text-slate-700">
             <span className="h-2 w-2 rounded-full bg-slate-500" />
             Currently Out of Stock
           </span>
         ) : product.availability === 'low_stock' ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
             <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
             Low Stock — Only {product.stock} left in inventory
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-            <Check className="h-3.5 w-3.5" />
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800">
+            <Check className="h-3.5 w-3.5 text-emerald-600" />
             In Stock ({product.stock} units available)
           </span>
         )}
@@ -123,7 +123,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
             type="button"
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className={`w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-bold shadow-xs transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               added
                 ? 'bg-emerald-600 text-white'
                 : 'bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none'
@@ -148,7 +148,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
             type="button"
             onClick={handleBuyNow}
             disabled={isOutOfStock}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-white px-6 py-3.5 text-sm font-bold shadow-md transition-all disabled:opacity-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 text-sm font-bold shadow-xs transition-all disabled:opacity-50"
           >
             <span>Buy Now</span>
             <ArrowRight className="h-4 w-4" />
@@ -159,19 +159,19 @@ export function ProductInfo({ product }: ProductInfoProps) {
             type="button"
             onClick={() => toggleItem(product.id)}
             aria-label={isWishlisted ? `Remove ${product.title} from wishlist` : `Add ${product.title} to wishlist`}
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               isWishlisted
-                ? 'border-rose-500/30 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
-                : 'border-border bg-background text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800'
+                ? 'border-rose-300 bg-rose-50 text-rose-600 hover:bg-rose-100'
+                : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
-            <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-rose-500' : ''}`} />
+            <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Trust Badges */}
-      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border/60 text-xs text-slate-500 font-medium">
+      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-200 text-xs text-slate-600 font-medium">
         <div className="flex items-center gap-2">
           <Truck className="h-4 w-4 text-blue-600 shrink-0" />
           <span>Standard Delivery Options</span>
